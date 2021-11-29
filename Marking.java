@@ -69,9 +69,9 @@ final class Marking {
     /**
      * The generateMarks() function.
      *
-     * @param arrayOfStudents the collection of students
-     * @param arrayOfAssignments the collection of assignments
-     * @return the generated marks
+     * @param arrayOfStudents
+     * @param arrayOfAssignments 
+     * @return 
      */
     public static String[][] generateMarks(final Integer[] arrayOfStudents,
         final Integer[] arrayOfAssignments) {
@@ -141,11 +141,6 @@ final class Marking {
 
 
         /* Normal Distribution numbers
-        Random random = new Random();
-        for (int loopCounter = 0; loopCounter < 5; loopCounter++) {
-            int mark = (int)Math.floor(random.nextGaussian()*10+75);
-            System.out.println(mark);
-        }
         */
 
         System.out.println("\nDone.");

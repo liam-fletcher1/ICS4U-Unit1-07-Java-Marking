@@ -1,13 +1,15 @@
-/**
- * The Marking program
+/*
+ * This is a program generates marks
+ * after reading in text files.
  *
  * @author  Liam Fletcher
  * @version 1.0
- * @since   2021-11-29
+ * @since   2021-11-30
  */
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.FileWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,9 +22,9 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * The Marking program
+ * This is the marks program.
  */
-final class Marking {
+final class Marks {
 
     /**
      * Prevent instantiation
@@ -32,68 +34,38 @@ final class Marking {
      * @throws IllegalStateException
      *
      */
-    private Marking() {
+    private Marks() {
         throw new IllegalStateException("Cannot be instantiated");
     }
-
-
-    public static ArrayList < ArrayList < Integer >> mergeArrays(final ArrayList < String > arrayOfStudents, final ArrayList < String > arrayOfAssignments,
-        final int amountOfStudents, final int amountOfAssignments) {
-
-        ArrayList < ArrayList < Integer >> combinedArray = new ArrayList < ArrayList < Integer >> ();
-        int counterOne;
-        int counterTwo;
-        int counterThree;
-
-        for (counterOne = 0; counterOne < amountOfStudents; ++counterOne) {
-
-            combinedArray.add(new ArrayList < Integer > ());
-            System.out.println(combinedArray + "" + amountOfStudents);
-        }
-
-        for (counterTwo = 0; counterTwo < amountOfStudents; ++counterTwo) {
-
-            for (counterThree = 0; counterThree < amountOfAssignments; ++counterThree) {
-
-                combinedArray.get(counterTwo).add(counterThree);
-
-            }
-
-        }
-
-        return combinedArray;
-
-    }
-
 
     /**
      * The generateMarks() function.
      *
-     * @param arrayOfStudents
-     * @param arrayOfAssignments 
-     * @return 
+     * @param arrayOfStudents the collection of students
+     * @param arrayOfAssignments the collection of assignments
+     * @return the generated marks
      */
-    public static String[][] generateMarks(final Integer[] arrayOfStudents,
-        final Integer[] arrayOfAssignments) {
+    public static String[][] generateTable(
+        final String[] students, final String[] assignments) {
 
-        // this is just a place holder!
-        String[][] markArray = {
-            {
-                "",
-                "Ass #1",
-                "Ass #2"
-            },
-            {
-                "Sue",
-                "76%",
-                "88%"
-            },
-            {
-                "Bob",
-                "46%",
-                "81%"
+        int numStudents = students.length;
+        int numAssignments = assignments.length;
+        Random random = new Random();
+
+        String[][] markArray = new String[numStudents][numAssignments + 1];
+
+        for (int loop1 = 0; loop1 < numStudents; loop1++) {
+
+            markArray[loop1][0] = students[loop1];
+
+            for (int loop2 = 0; loop2 < numAssignments; loop2++) {
+
+                final int mark = (int) Math.floor(
+                    random.nextGaussian() * 10 + 75);
+
+                markArray[loop1][loop2 + 1] = String.valueOf(mark);
             }
-        };
+        }
 
         return markArray;
     }
@@ -105,9 +77,12 @@ final class Marking {
      */
     public static void main(final String[] args) {
         final ArrayList < String > listOfStudents = new ArrayList < String > ();
-        final ArrayList < String > listOfAssingments = new ArrayList < String > ();
-        final Path studentFilePath = Paths.get("../", args[0]);
-        final Path assignmentFilePath = Paths.get("../", args[1]);
+        final ArrayList < String > listOfAssignments = new ArrayList < String > ();
+        final String[] arrayOfStudents;
+        final String[] arrayOfAssignments;
+
+        final Path studentFilePath = Paths.get("./", args[0]);
+        final Path assignmentFilePath = Paths.get("./", args[1]);
         final Charset charset = Charset.forName("UTF-8");
 
         try (BufferedReader readerStudent = Files.newBufferedReader(
@@ -115,7 +90,6 @@ final class Marking {
             String lineStudent = null;
             while ((lineStudent = readerStudent.readLine()) != null) {
                 listOfStudents.add(lineStudent);
-                System.out.println(lineStudent);
             }
         } catch (IOException errorCode) {
             System.err.println(errorCode);
@@ -125,24 +99,21 @@ final class Marking {
             assignmentFilePath, charset)) {
             String lineAssignment = null;
             while ((lineAssignment = readerAssignment.readLine()) != null) {
-                listOfAssingments.add(lineAssignment);
-                System.out.println(lineAssignment);
+                listOfAssignments.add(lineAssignment);
             }
         } catch (IOException errorCode) {
             System.err.println(errorCode);
         }
 
-        final Integer quantityStudents = listOfStudents.size();
-        System.out.println("here" + listOfAssingments);
-        final Integer quantityAssignments = listOfAssingments.size();
+        arrayOfStudents = listOfStudents.toArray(new String[0]);
+        arrayOfAssignments = listOfAssignments.toArray(new String[0]);
 
-        final ArrayList < ArrayList < Integer >> mergedArray = mergeArrays(listOfStudents, listOfAssingments, quantityStudents, quantityAssignments);
+        final String[][] marksArray = generateTable(
+            arrayOfStudents, arrayOfAssignments);
 
-
-
-        /* Normal Distribution numbers
-        */
-
-        System.out.println("\nDone.");
+        System.out.println(Arrays.deepToString(marksArray)
+            .replace("], ", "\n")
+            .replace("[", "")
+            .replace("]", ""));
     }
 }
